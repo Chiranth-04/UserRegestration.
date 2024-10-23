@@ -124,5 +124,24 @@ public class UserDAO {
         conn.close();
         return exists;
     }
+    public void updateUserId(String currentUser , String newUserId) throws SQLException, ClassNotFoundException {
+        String query = "UPDATE users SET userId = ? WHERE userId = ?";
+        try (Connection conn = DatabaseConnection.initializeDatabase();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            // Set parameters for the SQL query
+            stmt.setString(1, newUserId);
+            stmt.setString(2, currentUser );
+
+            // Execute the update
+            int rowsUpdated = stmt.executeUpdate();
+            System.out.println("Rows updated for userId change: " + rowsUpdated);
+
+            // Ensure the update affects at least one row
+            if (rowsUpdated == 0) {
+                throw new SQLException("No rows updated. The current userId might not exist.");
+            }
+        }
+    }
     
 }
